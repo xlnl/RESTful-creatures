@@ -1,0 +1,16 @@
+<h1>List of Dinos</h1>
+<!-- There may be instances where you need to GET dinosaurs, 
+but you don't want them all. 
+A good example is filtering dinosaurs with a specific name via a search bar. -->
+<form method="GET" action="/dinosaurs">
+  <label for="nameFilter">Filter by Name</label>
+  <input id="nameFilter" type="text" name="nameFilter">
+  <input type="submit">
+</form>
+<!-- name="nameFilter" corresponds to the key-value pair in the query string!-->
+<ul>
+  <% dinosaurs.forEach((dino) => { %>
+    <li><%= dino.name %> is a <%= dino.type %></li>
+  <% }); %>
+</ul>
+<!-- use dot notation to access the individual values of the object! -->

@@ -1,0 +1,15 @@
+<h1>RESTful Creatures Home Page</h1>
+<h2>DINOSAURS</h2>
+<ul>
+    <% dinosaurs.forEach(function(dino) { %>
+    <li><%= dino.name %> is a <%= dino.type %></li>
+    <% }); %>
+</ul>
+
+<h2>OTHER PREHISTORIC CREATURES</h2>
+<ul>
+    <% creatures.forEach(function(creature) { %>
+    <li><%= creature.type %> <img src="<%= creature.img_url %>"></li>
+    <% }); %>
+</ul>
+
