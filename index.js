@@ -62,15 +62,14 @@ app.post('/dinosaurs', (req, res) => {
 
 // DINO DELETE ROUTE
 app.delete("/dinosaurs/:idx", (req, res) => {
-    var dinosaurs = fs.readFileSync("./dinosaurs.json");
+    let dinosaurs = fs.readFileSync("./dinosaurs.json");
     let dinoData = JSON.parse(dinosaurs);
 
     // remove the deleted dinosaur from the dinosaurs array
-    dinoData.splice(req.param.idx, 1)
+    dinoData.splice(req.params.idx, 1)
 
     // save the new dinosaurs to the data.json file
     fs.writeFileSync("./dinosaurs.json", JSON.stringify(dinoData));
-
     res.redirect("/dinosaurs");
 });
 
@@ -119,11 +118,10 @@ app.delete("/prehistoric_creatures/:idx", (req, res) => {
     let creatureData = JSON.parse(creatures);
 
     // remove the deleted dinosaur from the dinosaurs array
-    creatureData.splice(req.param.idx, 1)
-
+    creatureData.splice(req.params.idx, 1)
+    // remember to add the "params" plural so it works and will delete what is being deleted!
     // save the new dinosaurs to the data.json file
     fs.writeFileSync("./prehistoric_creatures.json", JSON.stringify(creatureData));
-
     res.redirect('/prehistoric_creatures');
 });
 
