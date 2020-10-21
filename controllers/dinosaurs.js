@@ -27,4 +27,17 @@ router.get("/edit/:idx", (req, res) => {
     res.render('dinosaurs/edit', {dino: dinoData[req.params.idx], dinoID: req.params.idx});
 });
 
+// DINO DELETE ROUTE
+router.delete("/:idx", (req, res) => {
+    let dinosaurs = fs.readFileSync("./dinosaurs.json");
+    let dinoData = JSON.parse(dinosaurs);
+
+    // remove the deleted dinosaur from the dinosaurs array
+    dinoData.splice(req.params.idx, 1)
+
+    // save the new dinosaurs to the data.json file
+    fs.writeFileSync("./dinosaurs.json", JSON.stringify(dinoData));
+    res.redirect("/dinosaurs");
+});
+
 module.exports = router;

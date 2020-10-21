@@ -15,6 +15,8 @@ app.use(ejsLayouts);
 // put the data in the body field of the request object, makes req.body work
 app.use(express.urlencoded({extended: false}));
 
+app.use("/dinosaurs", require("./controllers/dinosaurs"))
+app.use("/prehistoric_creatures", require("./controllers/prehistoric_creatures"))
 
 app.get("/", (req, res) => {
     let dinosaurs = fs.readFileSync("./dinosaurs.json");
@@ -42,8 +44,6 @@ app.get("/dinosaurs", (req, res) => {
     res.render("dinosaurs/index", {dinosaurs:dinoData});
 });
 
-app.use("/dinosaurs", require("./controllers/dinosaurs"))
-
 // DINO POST ROUTE
 app.post('/dinosaurs', (req, res) => {
     // console.log(req.body); // allowed by using body-parser middleware
@@ -58,19 +58,6 @@ app.post('/dinosaurs', (req, res) => {
     // JSON.stringify does the opposite of JSON.parse - it converts javascript data into json data.
     //redirect to the GET /dinosaurs route (index)
     res.redirect('/dinosaurs');
-});
-
-// DINO DELETE ROUTE
-app.delete("/dinosaurs/:idx", (req, res) => {
-    let dinosaurs = fs.readFileSync("./dinosaurs.json");
-    let dinoData = JSON.parse(dinosaurs);
-
-    // remove the deleted dinosaur from the dinosaurs array
-    dinoData.splice(req.params.idx, 1)
-
-    // save the new dinosaurs to the data.json file
-    fs.writeFileSync("./dinosaurs.json", JSON.stringify(dinoData));
-    res.redirect("/dinosaurs");
 });
 
 // DINO PUT ROUTE -> to update the data for the specific dino
@@ -106,21 +93,6 @@ app.post('/prehistoric_creatures', (req, res) => {
     let creatures = fs.readFileSync("./prehistoric_creatures.json");
     let creatureData = JSON.parse(creatures);
     creatureData.push(req.body);
-    fs.writeFileSync("./prehistoric_creatures.json", JSON.stringify(creatureData));
-    res.redirect('/prehistoric_creatures');
-});
-
-app.use("/prehistoric_creatures", require("./controllers/prehistoric_creatures"))
-
-// CREATURE DELETE ROUTE
-app.delete("/prehistoric_creatures/:idx", (req, res) => {
-    let creatures = fs.readFileSync("./prehistoric_creatures.json");
-    let creatureData = JSON.parse(creatures);
-
-    // remove the deleted dinosaur from the dinosaurs array
-    creatureData.splice(req.params.idx, 1)
-    // remember to add the "params" plural so it works and will delete what is being deleted!
-    // save the new dinosaurs to the data.json file
     fs.writeFileSync("./prehistoric_creatures.json", JSON.stringify(creatureData));
     res.redirect('/prehistoric_creatures');
 });
