@@ -1,0 +1,12 @@
+<h1> You are editing this dino: <%= dinoID %></h1>
+<form method="POST" action="/dinosaurs/<%= dinoID %>/?_method=PUT"> 
+    <label for="dinosaurName">Name</label>    
+    <input type="text" name="name" id="dinosaurName" value="<%= dino.name %>">
+    
+    <label for="dinosaurType">Type</label>
+    <input type="text" name="type" id="dinosaurType" value="<%= dino.type %>">
+    <input type="submit">
+</form>
+
+<!-- /?_method=PUT": how method_override works, it's actually a PUT request instead of POST -->
+<!-- wanna use post so that data won't be grabbed by malware in the browser & want to be able to access it through req.body -->

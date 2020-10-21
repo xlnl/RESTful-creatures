@@ -9,8 +9,13 @@ A good example is filtering dinosaurs with a specific name via a search bar. -->
 </form>
 <!-- name="nameFilter" corresponds to the key-value pair in the query string!-->
 <ul>
-  <% dinosaurs.forEach((dino) => { %>
-    <li><%= dino.name %> is a <%= dino.type %></li>
+  <% dinosaurs.forEach((dino, index) => { %>
+  <li><%= dino.name %> is a <%= dino.type %>
+    <a href="/dinosaurs/edit/<%= index %>">Edit</a>
+    <form method="POST" action="/dinosaurs/<%= index %>/?_method=DELETE">
+      <input type="submit" value="Delete">
+    </form>
+  </li>
   <% }); %>
 </ul>
 <!-- use dot notation to access the individual values of the object! -->

@@ -3,6 +3,11 @@ const express = require("express");
 const app = express();
 const ejsLayouts = require('express-ejs-layouts');
 var fs = require('fs');
+// needed to access our data 
+var methodOverride = require("method-override");
+
+app.use(methodOverride("_method"));
+// an only use POST methods to activate this functionality so need to use a form to submit the request
 
 app.set('view engine', 'ejs');
 app.use(ejsLayouts);
@@ -20,6 +25,7 @@ app.get("/", (req, res) => {
 })
 
 // DINO INDEX ROUTE 
+// Index = route (URL) that lists all items of a specific type AKA a GET request
 app.get("/dinosaurs", (req, res) => {
     let dinosaurs = fs.readFileSync("./dinosaurs.json");
     let dinoData = JSON.parse(dinosaurs); // convert the string into an array
@@ -35,6 +41,8 @@ app.get("/dinosaurs", (req, res) => {
     }
     res.render("dinosaurs/index", {dinosaurs:dinoData});
 });
+
+app.use("/dinosaurs", require("./controllers/dinosaurs"))
 
 // DINO POST ROUTE
 app.post('/dinosaurs', (req, res) => {
@@ -52,7 +60,31 @@ app.post('/dinosaurs', (req, res) => {
     res.redirect('/dinosaurs');
 });
 
-app.use("/dinosaurs", require("./controllers/dinosaurs"))
+// DINO DELETE ROUTE
+app.delete("/dinosaurs/:idx", (req, res) => {
+    var dinosaurs = fs.readFileSync("./dinosaurs.json");
+    let dinoData = JSON.parse(dinosaurs);
+
+    // remove the deleted dinosaur from the dinosaurs array
+    dinoData.splice(req.param.idx, 1)
+
+    // save the new dinosaurs to the data.json file
+    fs.writeFileSync("./dinosaurs.json", JSON.stringify(dinoData));
+
+    res.redirect("/dinosaurs");
+});
+
+// DINO PUT ROUTE -> to update the data for the specific dino
+app.put("/dinosaurs/:idx", (req, res) => {
+    let dinosaurs = fs.readFileSync("./dinosaurs.json");
+    let dinoData = JSON.parse(dinosaurs);
+
+    dinoData[req.params.idx].name = req.body.name;
+    dinoData[req.params.idx].type = req.body.type;
+
+    fs.writeFileSync("./dinosaurs.json", JSON.stringify(dinoData));
+    res.redirect("/dinosaurs");
+});
 
 // CREATURE INDEX ROUTE 
 app.get("/prehistoric_creatures", (req, res) => {
@@ -80,6 +112,32 @@ app.post('/prehistoric_creatures', (req, res) => {
 });
 
 app.use("/prehistoric_creatures", require("./controllers/prehistoric_creatures"))
+
+// CREATURE DELETE ROUTE
+app.delete("/prehistoric_creatures/:idx", (req, res) => {
+    let creatures = fs.readFileSync("./prehistoric_creatures.json");
+    let creatureData = JSON.parse(creatures);
+
+    // remove the deleted dinosaur from the dinosaurs array
+    creatureData.splice(req.param.idx, 1)
+
+    // save the new dinosaurs to the data.json file
+    fs.writeFileSync("./prehistoric_creatures.json", JSON.stringify(creatureData));
+
+    res.redirect('/prehistoric_creatures');
+});
+
+// CREATURE PUT ROUTE -> to update the data for the specific creature
+app.put("/prehistoric_creatures/:idx", (req, res) => {
+    let creatures = fs.readFileSync("./prehistoric_creatures.json");
+    let creatureData = JSON.parse(creatures);
+
+    creatureData[req.params.idx].type = req.body.type;
+    creatureData[req.params.idx].img_url = req.body.img_url;
+
+    fs.writeFileSync("./prehistoric_creatures.json", JSON.stringify(dinoData));
+    res.redirect('/prehistoric_creatures');
+});
 
 app.listen(port, () => {
   console.log(`You're listing to port ${port}`);
